@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSU User Data</title>
+    <style>
+        / /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #282c35; 
+            color: #fff; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .transparent-bg {
+            background-color: rgba(0, 0, 0, 0.7); 
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            width: 80%;
+            max-width: 8000px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+        }
+
+        /* Cabeçalho */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #37b71d; 
+        }
+
+        /* Formulário */
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #fff; 
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #555; 
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1); 
+            background-color: #444; 
+            color: #fff; 
+        }
+
+        input[type="submit"] {
+            padding: 12px;
+            background-color: #37b71d; 
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #4fa3cc; 
+        }
+
+        /* Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            color: #fff; 
+            background-color: #333;
+        }
+
+        thead {
+            background-color: #37b71d; 
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #555;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333; 
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-container label {
+            margin-right: 10px;
+            font-weight: normal;
+            color: #fff; 
+        }
+
+        .checkbox-container input {
+            margin-right: 5px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="transparent-bg">
+        <h1 style="text-align: center; color: #37b71d; margin-bottom: 20px; font-size: 36px;">Osu!mania Score Viewer</h1>
+
+        {% if username %}
+            {% if user_data == "Usuário não encontrado." %}
+                <h1 style="color: red;">Usuário não encontrado</h1>
+            {% else %}
+                <h1>Últimas Jogadas de {{ username }} (osu!mania)</h1>
+            {% endif %}
+        {% endif %}
+        
+        <form method="POST" action="/">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" name="username" id="username" {% if username %}value="{{ username }}" {% endif %} required>
+            <input type="submit" value="Buscar">
+            <div class="checkbox-container">
+                <input type="checkbox" name="hide_failed" id="hide_failed" onchange="toggleFailedRanks()" {% if hide_failed %}checked{% endif %}>
+                <label for="hide_failed">Ocultar HP fail</label>
+            </div>
+        </form>
+
+        {% if username and user_data != "Usuário não encontrado." %}
+            <table id="osuTable">
+                <thead>
+                    <tr>
+                        <th>Beatmap name</th>
+                        <th>Data (UTC+0)</th>
+                        <th>Score</th>
+                        <th>Rank</th>
+                        <th>MA Ratio</th>
+                        <th>Precisão</th>
+                        <th>Marvelous</th>
+                        <th>Perfect</th>
+                        <th>Great</th>
+                        <th>Good</th>
+                        <th>Bad</th>
+                        <th>Miss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in user_data %}
+                        <tr>
+                            <td>{{ data.beatmap_artist + " - " + data.beatmap_name + ' [' + data.beatmap_difficulty + ']' }}</td>
+                            <td>{{ data.date }}</td>
+                            <td>{{ data.score }}</td>
+                            <td>{{ data.beatmap_rank }}</td>
+                            <td>{{ data.ratio + ":1" }}</td>
+                            <td>{{ data.prec }}</td>
+                            <td>{{ data.countgeki }}</td>
+                            <td>{{ data.count300 }}</td>
+                            <td>{{ data.countkatu }}</td>
+                            <td>{{ data.count100 }}</td>
+                            <td>{{ data.count50 }}</td>
+                            <td>{{ data.countmiss }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleFailedRanks() {
+            var checkbox = document.getElementById("hide_failed");
+            var tableRows = document.querySelectorAll("#osuTable tbody tr");
+
+            tableRows.forEach(function(row) {
+                var rankCell = row.querySelector("td:nth-child(4)");
+                if (checkbox.checked && rankCell.textContent.trim() === 'F') {
+                    row.style.display = "none";
+                } else {
+                    row.style.display = "";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
