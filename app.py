@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import requests
 import json
 import math
-
+import webbrowser
 app = Flask(__name__)
 
 
@@ -28,6 +28,24 @@ def fetch_osu_user_data(api_key, username, beatmap_id, mode, limit):
                 data['beatmap_name'] = beatmap_info.get('title', 'Beatmap Desconhecido')
                 data['beatmap_artist'] = beatmap_info.get('artist', 'Artista desconhecido')
                 data['beatmap_difficulty'] = beatmap_info.get('version', 'Unknown')
+                data['mods'] = beatmap_info.get('enabled_mods', 'None')
+                
+                if data.get('enabled_mods') == '0':
+                    data['mods'] = ''
+                elif data.get('enabled_mods') == '64':
+                    data['mods'] = ' +DT'
+                elif data.get('enabled_mods') == '576':
+                    data['mods'] = ' +NC'
+                elif data.get('enabled_mods') == '1073741824':
+                    data['mods'] = ' +MR'
+                elif data.get('enabled_mods') == '1073741888':
+                    data['mods'] = ' +DT,MR'
+                elif data.get('enabled_mods') == '1073742400':
+                    data['mods'] = ' +NC,MR'
+                elif data.get('enabled_mods') == '256':
+                    data['mods'] = ' +HT'
+                    
+                    
                 if data.get('rank') == 'X':
                     data['beatmap_rank'] = "SS"
                 else:
@@ -43,14 +61,13 @@ def fetch_osu_user_data(api_key, username, beatmap_id, mode, limit):
         return f"Erro ao conectar à API: {response.status_code}"
     
 
-
-def get_beatmap_info(data, api_key, limit):
+def get_beatmap_info(data, api_key, limit2):
     url = "https://osu.ppy.sh/api/get_beatmaps"
     beatmap_id = data.get('beatmap_id')
     params = {
         'k': api_key,
         'b': beatmap_id,
-        'limit': limit,
+        'limit': limit2,
         'type': 'string'
     }
     response = requests.get(url, params=params)
@@ -85,13 +102,16 @@ def exibir_date(data):
     return date
 
 
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     api_key = "07e5bae41ba15ecfb3dea2020f6c726930be3b97"
     username = None
     mode = '3'
     beatmap_id = '0'
-    limit = '50'
+    limit = '20'
+
     user_data = []
 
     if request.method == 'POST':
@@ -106,4 +126,6 @@ def index():
     return render_template('index.html', username=username, user_data=user_data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    
+    webbrowser.open('http://127.0.0.1:5000/')
+    app.run(debug=False)

@@ -38,7 +38,7 @@ def fetch_osu_user_data(api_key, username, beatmap_id, mode):
 
 # Substitua YOUR_API_KEY e YOUR_USERNAME pelos seus respectivos valores
 api_key = "07e5bae41ba15ecfb3dea2020f6c726930be3b97"
-username = "Phantom1600"
+username = " " # Inserir nome
 mode = '3'
 beatmap_id = '0'
 

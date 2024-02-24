@@ -166,7 +166,7 @@
                 <tbody>
                     {% for data in user_data %}
                         <tr>
-                            <td>{{ data.beatmap_artist + " - " + data.beatmap_name + ' [' + data.beatmap_difficulty + ']' }}</td>
+                            <td>{{ data.beatmap_artist + " - " + data.beatmap_name + ' [' + data.beatmap_difficulty + ']' +  data.mods }}</td>
                             <td>{{ data.date }}</td>
                             <td>{{ data.score }}</td>
                             <td>{{ data.beatmap_rank }}</td>
