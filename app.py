@@ -124,8 +124,11 @@ def index():
     #beatmap_info = [data['beatmap_id'] for data in user_data]
 
     return render_template('index.html', username=username, user_data=user_data)
-
+    
 if __name__ == '__main__':
     
-    webbrowser.open('http://127.0.0.1:5000/')
-    app.run(debug=False)
+    port = 5130 
+    url = f'http://127.0.0.1:{port}/'
+
+    webbrowser.open(url)
+    app.run(port=port, debug=False)

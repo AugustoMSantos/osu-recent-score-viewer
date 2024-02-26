@@ -131,7 +131,7 @@
             {% if user_data == "Usuário não encontrado." %}
                 <h1 style="color: red;">Usuário não encontrado</h1>
             {% else %}
-                <h1>Últimas Jogadas de {{ username }} (osu!mania)</h1>
+                <h1>Recent scores: {{ username }} (osu!mania)</h1>
             {% endif %}
         {% endif %}
         
@@ -141,7 +141,7 @@
             <input type="submit" value="Buscar">
             <div class="checkbox-container">
                 <input type="checkbox" name="hide_failed" id="hide_failed" onchange="toggleFailedRanks()" {% if hide_failed %}checked{% endif %}>
-                <label for="hide_failed">Ocultar HP fail</label>
+                <label for="hide_failed">Hide failed scores</label>
             </div>
         </form>
 
@@ -150,11 +150,11 @@
                 <thead>
                     <tr>
                         <th>Beatmap name</th>
-                        <th>Data (UTC+0)</th>
+                        <th>Time (UTC+0)</th>
                         <th>Score</th>
                         <th>Rank</th>
                         <th>MA Ratio</th>
-                        <th>Precisão</th>
+                        <th>Accuracy</th>
                         <th>Marvelous</th>
                         <th>Perfect</th>
                         <th>Great</th>
